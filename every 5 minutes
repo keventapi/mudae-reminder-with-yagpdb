@@ -1,0 +1,17 @@
+{{/*every 5 minutes it will update the time for you to be remembered*/}}
+{{$tempo := toInt (dbGet 0 "tempo").Value}}
+{{if lt $tempo 12}}
+	{{$tempo := add 1 $tempo}}
+	{{dbSet 0 "tempo" (str $tempo)}}
+{{else}}
+	{{$tempo := 1}}
+	{{dbSet 0 "tempo" (str $tempo)}}
+{{end}}
+ 
+{{/* multiply by 60*10 to put in your remind and then subtract by 3600 to get the formula for the remaining time in seconds */}}
+{{$tempo_formatado := mult $tempo 5 60 }}
+{{$tempo_formatado := sub 3600 $tempo_formatado}}
+ 
+{{/* send all the information to the database to work in other places */}}
+{{dbSet 0 "hora_em_segundos" (str $tempo_formatado)}}
+ 
