@@ -6,6 +6,8 @@
 	{{sendMessage .Channel.ID "voce precisa digitar um numero de 1 ao 11"}}
 {{end}}
 
+
+{{/* put as argument the number corresponding to the time if there is 30 minutes left put -timeadd 6 */}}
 {{/*-settime*/}}
 {{/*0 : 0.0*/}}
 {{/*1 : 5.0*/}}
