@@ -1,0 +1,17 @@
+{{/* a cada 10 minutos vamos adicionar um +1 ao banco de dados geral (id 0) e quando ele chegar a 6 vamos retornar ele para 1 */}}
+{{$tempo := toInt (dbGet 0 "tempo").Value}}
+{{if lt $tempo 12}}
+	{{$tempo := add 1 $tempo}}
+	{{dbSet 0 "tempo" (str $tempo)}}
+{{else}}
+	{{$tempo := 1}}
+	{{dbSet 0 "tempo" (str $tempo)}}
+{{end}}
+ 
+{{/* fazer multiplicaçao por 60*10 para por no seu remind e depois subtrair por 3600 para ter a formula do tempo restante em segundos */}}
+{{$tempo_formatado := mult $tempo 5 60 }}
+{{$tempo_formatado := sub 3600 $tempo_formatado}}
+ 
+{{/* enviar para o banco de dados toda a informaçao para trabalhar ela em outros locais */}}
+{{dbSet 0 "hora_em_segundos" (str $tempo_formatado)}}
+ 
