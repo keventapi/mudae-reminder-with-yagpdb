@@ -1,3 +1,5 @@
+{{ /* run this command to update as soon as the cooldown to roll again is over */ }}
+
 {{/*every 5 minutes it will update the time for you to be remembered*/}}
 {{$tempo := toInt (dbGet 0 "tempo").Value}}
 {{if lt $tempo 12}}
