@@ -1,0 +1,67 @@
+{{$starts := parseArgs 0 "" (carg "string" "string")}}
+{{$starts := $starts.Get 0}}
+{{$starts := lower $starts}}
+ 
+{{if or (eq "ma" $starts) (eq "wa" $starts) (eq "ha" $starts) (eq "mg" $starts) (eq "wg" $starts) (eq "hg" $starts) (eq "m" $starts) (eq "w" $starts) (eq "h" $starts)}}
+	{{$tempo := toInt (dbGet 0 "hora_em_segundos").Value}}
+	{{$tempo}}
+	{{$isGlobal := 0}}
+	{{$name := "lembrete_secundario_mudae"}}
+	{{$lengthSec :=  $tempo}}
+	{{$id := 0}}
+	{{$key := joinStr "" "cooldown_" $name}}
+	{{if eq $isGlobal 0}}
+		{{$id = .User.ID}}
+	{{end}}
+	{{if dbGet (toInt64 $id) $key}}
+		{{/*   */}}
+	{{else}}
+		{{if eq 0 $lengthSec}}
+			{{dbSetExpire (toInt64 $id) $key "cooldown" 3200}}
+		{{else}}
+			{{$lengthSec := sub $lengthSec 240}}
+			{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
+		{{end}}
+		{{$tempo_remind := div $tempo 60}}
+		{{if eq $tempo 0}}
+			{{$tempo_remind := 60}}
+			{{$remind := exec "remindme" $tempo_remind "rolls resetados"}}
+		{{else}}
+			{{$remind := exec "remindme" $tempo_remind "rolls resetados"}}
+		{{end}}
+	{{end}}
+ 
+ 
+{{else if eq "daily" $starts}}
+	{{$isGlobal := 0}} 
+	{{$name := "daily"}}
+	{{$lengthSec :=  72000}}
+	{{$id := 0}}
+	{{$key := joinStr "" "cooldown_" $name}}
+	{{if eq $isGlobal 0}}
+		{{$id = .User.ID}}
+	{{end}}
+	{{if dbGet (toInt64 $id) $key}} 
+		{{/*bloco de comandos que sera executado caso esteja em cooldown*/}} 
+	{{else}}
+		{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
+		{{$remind := exec "remindme" "20h" "$daily is ready"}} 
+	{{end}}
+ 
+ 
+{{else if or (eq "dailykakera" $starts) (eq "dk" $starts)}}
+	{{$isGlobal := 0}}
+	{{$name := "daily_kakera"}} 
+	{{$lengthSec :=  72000}} 
+	{{$id := 0}}
+	{{$key := joinStr "" "cooldown_" $name}}
+	{{if eq $isGlobal 0}}
+		{{$id = .User.ID}}
+	{{end}}
+	{{if dbGet (toInt64 $id) $key}} 
+		{{/*bloco de comando que sera executado caso esteja em cooldown*/}} 
+	{{else}}
+		{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
+		{{$remind := exec "remindme" "20h" "$dk is ready"}} 
+	{{end}}
+{{end}}
