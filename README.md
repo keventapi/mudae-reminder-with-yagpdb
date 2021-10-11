@@ -4,7 +4,7 @@ you can simply copy and paste the code into their respective areas in yagpdb
 
 a simple reminder, to remind you that the change rolls are ready, it uses the custom yagpdb commands
 on this remind we use the YAGPDB bot, which allows us to create custom commands, in this we can create
-a command that will run every 5 minutes, let's use a command like that, one with the bot's prefix 
+a command that will run every 5 minutes, let's use a command like that, one "start with" with the bot's prefix 
 (the default prefix is ​​$ and the code for this it has the same name as the prefix), every time we roll the bot will put
 us a cooldown and activate the remindme command (time left in minutes for the next rolls) "rolls is ready".
 
