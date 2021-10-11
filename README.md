@@ -9,6 +9,5 @@ and for daily and dailykakera we will do the same, but as they are commands that
 be much simpler and it is already implemented in the "$" code.
 
 in case you notice an error in the time being given by the reminder, you can change it with the -addtime command, you 
-will have a list of arguments (you cannot exceed this list) commented that will help you, example: if 0 is missing at 4 minutes you put -addtime 0 if
-there is 30 to 34 minutes you put -addtime 6, remember it will always be multiple of 5, so always look carefully at what time is left.
+will have a list of arguments (you cannot exceed this list) commented that will help you, example: if 0 is missing at 4 minutes you put -addtime 0 if there is 30 to 34 minutes you put -addtime 6, remember it will always be multiple of 5, so always look carefully at what time is left.
 
