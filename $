@@ -1,12 +1,14 @@
+{{/*let's get the code we are running and for him in small letters*/}}
 {{$starts := parseArgs 0 "" (carg "string" "string")}}
 {{$starts := $starts.Get 0}}
 {{$starts := lower $starts}}
  
+ 
+ {{/*go check if we're giving rolls*/}}
 {{if or (eq "ma" $starts) (eq "wa" $starts) (eq "ha" $starts) (eq "mg" $starts) (eq "wg" $starts) (eq "hg" $starts) (eq "m" $starts) (eq "w" $starts) (eq "h" $starts)}}
 	{{$tempo := toInt (dbGet 0 "hora_em_segundos").Value}}
-	{{$tempo}}
 	{{$isGlobal := 0}}
-	{{$name := "lembrete_secundario_mudae"}}
+	{{$name := "lembrete_mudae"}}
 	{{$lengthSec :=  $tempo}}
 	{{$id := 0}}
 	{{$key := joinStr "" "cooldown_" $name}}
@@ -14,14 +16,18 @@
 		{{$id = .User.ID}}
 	{{end}}
 	{{if dbGet (toInt64 $id) $key}}
-		{{/*   */}}
+		{{/*  we leave this empty because we don't want the code to execute anything if it's in cooldown */}}
 	{{else}}
+		{{/* to avoid bugs we check if the counter is equal to 0, and if so, we put it to have a cooldown of 1h (
+with a margin of error) */}}
 		{{if eq 0 $lengthSec}}
 			{{dbSetExpire (toInt64 $id) $key "cooldown" 3200}}
 		{{else}}
 			{{$lengthSec := sub $lengthSec 240}}
 			{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
 		{{end}}
+		
+		{{/* we put the time in seconds to minutes */}}
 		{{$tempo_remind := div $tempo 60}}
 		{{if eq $tempo 0}}
 			{{$tempo_remind := 60}}
@@ -31,6 +37,8 @@
 		{{end}}
 	{{end}}
  
+ 
+ {{/* reminder for daily */}}
  
 {{else if eq "daily" $starts}}
 	{{$isGlobal := 0}} 
@@ -42,7 +50,7 @@
 		{{$id = .User.ID}}
 	{{end}}
 	{{if dbGet (toInt64 $id) $key}} 
-		{{/*bloco de comandos que sera executado caso esteja em cooldown*/}} 
+		{{/* we leave this empty because we don't want the code to execute anything if it's in cooldown */}} 
 	{{else}}
 		{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
 		{{$remind := exec "remindme" "20h" "$daily is ready"}} 
@@ -59,7 +67,7 @@
 		{{$id = .User.ID}}
 	{{end}}
 	{{if dbGet (toInt64 $id) $key}} 
-		{{/*bloco de comando que sera executado caso esteja em cooldown*/}} 
+		{{/* we leave this empty because we don't want the code to execute anything if it's in cooldown */}} 
 	{{else}}
 		{{dbSetExpire (toInt64 $id) $key "cooldown" $lengthSec}}
 		{{$remind := exec "remindme" "20h" "$dk is ready"}} 
