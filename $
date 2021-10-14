@@ -19,11 +19,7 @@
 			{{$message := joinStr "" "proximo rolls em " $formula " minutos"}}
 			{{sendMessage .Channel.ID $message}}
 			{{$mod := toInt (mod currentTime.Hour 2) }}
-			{{if ne $mod 0}}
-				{{$remind := exec "remindme" $formula "rolls resetados $p esta pronto tambem"}}
-			{{else}}
-				{{$remind := exec "remindme" $formula "rolls resetados"}}
-			{{end}}
+			{{$remind := exec "remindme" $formula "rolls resetados"}}
 		{{end}}
 
 
