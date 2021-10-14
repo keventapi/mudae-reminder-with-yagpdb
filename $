@@ -12,7 +12,7 @@
 		{{if dbGet (toInt64 $id) $key}}
 			{{/*   */}}
 		{{else}}
-			{{$tempo_de_resete := 14}} {{/* trocar de acordo com o tempo q sobre das horas no server */}}
+			{{$tempo_de_resete := 14}} {{/* if your rolls reset at 00:15 put 15 if it resets at 00:35 put 35 */}}
 			{{$tempo_corrente := currentTime.Minute}} 
 			{{$formula := toInt ( sub 60 (sub $tempo_corrente $tempo_de_resete))}} {{/*60 - (tempo de resete - tempo de agora) */}}
 			{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}} {{/*transforma os minutos q falta em segundos e coloca no banco de dados o cooldown*/}}
