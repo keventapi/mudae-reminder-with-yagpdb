@@ -18,8 +18,27 @@
 			{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}} {{/*transforma os minutos q falta em segundos e coloca no banco de dados o cooldown*/}}
 			{{$message := joinStr "" "proximo rolls em " $formula " minutos"}}
 			{{sendMessage .Channel.ID $message}}
-			{{$mod := toInt (mod currentTime.Hour 2) }}
 			{{$remind := exec "remindme" $formula "rolls resetados"}}
+		{{end}}
+
+
+	{{else if or (eq "pokemon" $starts) (eq "p" $starts)}}
+		{{$name := "pokemon_lembrete"}}
+		{{$id := .User.ID}}
+		{{$key := joinStr "" "cooldown_" $name}}
+		{{if dbGet (toInt64 $id) $key}}
+			{{/*   */}}
+		{{else}}
+			{{$minuto := currentTime.Minute}} 
+			{{$hora := currentTime.Hour}}
+			{{$mod := toInt (mod $hora 2)}}
+			{{if eq $mod 0}}
+				{{$formula := toInt ( sub 120 $minuto)}}
+				{{$var := exec "remindme" $formula "$p is ready"}}
+			{{else}}
+				{{$formula := toInt ( sub 60 $minuto)}}
+				{{exec "remindme" $formula "$p is ready"}}
+			{{end}}
 		{{end}}
 
 
