@@ -18,6 +18,7 @@ you need replace only the "passed_time" variable
 	{{$start := $start.Get 0}}
 	{{$start := lower $start}}
 	{{$id := .User.ID}}
+	
 	{{/*the code'll check if someone rolls command was called*/}}
 	{{if or (eq "ma" $start) (eq "wa" $start) (eq "ha" $start) (eq "mg" $start) (eq "wg" $start) (eq "hg" $start) (eq "m" $start) (eq "w" $start) (eq "h" $start)}}
 		{{$name := "reminder_mudae"}}
@@ -33,7 +34,7 @@ you need replace only the "passed_time" variable
 				{{$message := joinStr "" "the next rolls in " (sub $passed_time $current_minute) " minutes"}}
 				{{sendMessage .Channel.ID $message}}
 			{{else}}
-				{{$formula := (sub 60 (sub $passed_time $current_minute))}}
+				{{$formula := (sub 60 (sub $current_minute $passed_time))}}
 				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
 				{{$remind := exec "remindme" (toInt $formula) "rolls is ready"}}
 				{{$message := joinStr "" "the next rolls in " $formula " minutes"}}
