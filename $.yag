@@ -6,7 +6,7 @@ if your roll reset is in 1:12 replace the "your number" to "12" or if your reset
 the trigger type is start with 
 the trigger is the mudae prefix (default "$")
 
-you need replace only the "passed_time" variable if you don't know what you are doing don't change nothing bellow of "passed_time"
+you need replace only the "passed_time" variable
 
 */}}
 
