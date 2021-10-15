@@ -38,7 +38,6 @@ you need replace only the "passed_time" variable if you don't know what you are 
 				{{$message := joinStr "" "the next rolls in " $formula " minutes"}}
 				{{sendMessage .Channel.ID $message}}
 			{{end}}
-			
 		{{end}}
 
 
