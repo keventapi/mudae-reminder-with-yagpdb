@@ -19,6 +19,7 @@ you need replace only the "passed_time" variable
 	{{$start := lower $start}}
 	{{$id := .User.ID}}
 	
+	
 	{{/*the code'll check if someone rolls command was called*/}}
 	{{if or (eq "ma" $start) (eq "wa" $start) (eq "ha" $start) (eq "mg" $start) (eq "wg" $start) (eq "hg" $start) (eq "m" $start) (eq "w" $start) (eq "h" $start)}}
 		{{$name := "reminder_mudae"}}
@@ -43,6 +44,7 @@ you need replace only the "passed_time" variable
 		{{end}}
 
 
+	{{/* bellow of this you don't need change nothing */}}
 	{{else if or (eq "pokemon" $start) (eq "p" $start)}}
 		{{$name := "reminder_pokemon"}}
 		{{$key := joinStr "" "cooldown_" $name}}
@@ -62,6 +64,7 @@ you need replace only the "passed_time" variable
 				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
 			{{end}}
 		{{end}}
+
 
 
 	{{else if eq "daily" $start}}
