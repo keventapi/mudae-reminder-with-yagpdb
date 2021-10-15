@@ -1,6 +1,6 @@
 {{/*
 
-replace the "$tempo_restante" for the minute passed the 00:00 example:
+replace the "$passed_time" for the minute passed the 00:00 example:
 if your roll reset is in 1:12 replace the "your number" to "12" or if your reset rolls is 1:35 replate to "35" without quotes
 
 the trigger type is start with 
