@@ -12,8 +12,9 @@ you need replace only the "passed_time" variable if you don't know what you are 
 
 {{$start := parseArgs 0 "" (carg "string" "string")}}
 {{$passed_time := "your number"}} {{/* replace this */}}
+{{$passed_time := toInt $passed_time}}
 
-{{if $start.IsSet 0}}
+{{if and ($start.IsSet 0) (lt $passed_time 60)}}
 	{{$start := $start.Get 0}}
 	{{$start := lower $start}}
 	{{$id := .User.ID}}
