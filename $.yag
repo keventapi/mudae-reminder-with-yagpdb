@@ -1,7 +1,7 @@
 {{/*
 
 replace the "$tempo_restante" for the minute passed the 00:00 example:
-if your roll reset is in 1:12 replace the "14" to "12" or if your reset rolls is 1:35 replate to "35" without quotes
+if your roll reset is in 1:12 replace the "your number" to "12" or if your reset rolls is 1:35 replate to "35" without quotes
 
 the trigger type is start with 
 the trigger is the mudae prefix (default "$")
@@ -11,7 +11,7 @@ you need replace only the "passed_time" variable if you don't know what you are 
 */}}
 
 {{$start := parseArgs 0 "" (carg "string" "string")}}
-{{$passed_time := 14}} {{/* replace this */}}
+{{$passed_time := "your number"}} {{/* replace this */}}
 
 {{if $start.IsSet 0}}
 	{{$start := $start.Get 0}}
