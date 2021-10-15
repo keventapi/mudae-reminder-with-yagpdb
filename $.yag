@@ -1,3 +1,14 @@
+{{/*
+
+replace the "$tempo_restante" for the minute passed the 00:00 example:
+if your roll reset is in 1:12 replace the "14" to "12" or if your reset rolls is 1:35 replate to "35" without quotes
+
+the trigger type is start with 
+the trigger is the mudae prefix (default "$")
+
+i am replacing the variable names and dataBase names for the english then gimme a moment
+*/}}
+
 {{$starts := parseArgs 0 "" (carg "string" "string")}}
 
 
