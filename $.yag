@@ -6,12 +6,12 @@ if your roll reset is in 1:12 replace the "14" to "12" or if your reset rolls is
 the trigger type is start with 
 the trigger is the mudae prefix (default "$")
 
-i am replacing the variable names and dataBase names for the english then gimme a moment
+you need replace only the "passed_time" variable if you don't know what you are doing don't change nothing bellow of "passed_time"
 
 */}}
 
 {{$start := parseArgs 0 "" (carg "string" "string")}}
-
+{{$passed_time := 14}} {{/* replace this */}}
 
 {{if $start.IsSet 0}}
 	{{$start := $start.Get 0}}
@@ -26,27 +26,30 @@ i am replacing the variable names and dataBase names for the english then gimme 
 		{{if dbGet (toInt64 $id) $key}}
 			{{/*   */}}
 		{{else}}
-			{{$passed_time := 14}} {{/* replace this */}}
 			{{$current_minute := currentTime.Minute}} 
 			{{$formula := toInt ( sub 60 (sub $current_time $passed_time))}}
-			{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}} 
+			{{if gt $current_minute $passed_time}}
+				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult (sub $passed_time $current_minute) 60)}}
+				{{$remind := exec "remindme" (sub $passed_time $current_minute) "rolls is ready"}}
+			{{else}}
+				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
+				{{$remind := exec "remindme" $formula "rolls is ready"}}
+			{{end}}
 			{{$message := joinStr "" "the next rolls in " $formula " minutes"}}
 			{{sendMessage .Channel.ID $message}}
-			{{$remind := exec "remindme" $formula "rolls is ready"}}
 		{{end}}
 
 
 	{{else if or (eq "pokemon" $starts) (eq "p" $starts)}}
-		{{$name := "pokemon_lembrete"}}
-		{{$id := .User.ID}}
+		{{$name := "reminder_pokemon"}}
 		{{$key := joinStr "" "cooldown_" $name}}
 		{{if dbGet (toInt64 $id) $key}}
 			{{/*   */}}
 		{{else}}
-			{{$minuto := currentTime.Minute}} 
-			{{$hora := currentTime.Hour}}
-			{{$mod := toInt (mod $hora 2)}}
-			{{if eq $mod 0}}
+			{{$minute := currentTime.Minute}} 
+			{{$hour := currentTime.Hour}}
+			{{$rest := toInt (mod $hora 2)}}
+			{{if eq $rest 0}}
 				{{$formula := toInt ( sub 120 $minuto)}}
 				{{$var := exec "remindme" $formula "$p is ready"}}
 				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
@@ -59,14 +62,9 @@ i am replacing the variable names and dataBase names for the english then gimme 
 
 
 	{{else if eq "daily" $starts}}
-		{{$isGlobal := 0}} 
 		{{$name := "daily"}}
 		{{$lengthSec :=  72000}}
-		{{$id := 0}}
 		{{$key := joinStr "" "cooldown_" $name}}
-		{{if eq $isGlobal 0}}
-			{{$id = .User.ID}}
-		{{end}}
 		{{if dbGet (toInt64 $id) $key}} 
 			{{/*bloco de comandos que sera executado caso esteja em cooldown*/}} 
 		{{else}}
@@ -77,7 +75,6 @@ i am replacing the variable names and dataBase names for the english then gimme 
 
 	{{else if eq $starts "vote"}}
 		{{$name := "vote_mudae"}}
-		{{$id := .User.ID}}
 		{{$lengthSec :=  43200}}
 		{{$key := joinStr "" "cooldown_" $name}}
 		{{if dbGet (toInt64 $id) $key}} 
@@ -89,14 +86,9 @@ i am replacing the variable names and dataBase names for the english then gimme 
 
 	
 	{{else if or (eq "dailykakera" $starts) (eq "dk" $starts)}}
-		{{$isGlobal := 0}}
 		{{$name := "daily_kakera"}} 
 		{{$lengthSec :=  72000}} 
-		{{$id := 0}}
 		{{$key := joinStr "" "cooldown_" $name}}
-		{{if eq $isGlobal 0}}
-			{{$id = .User.ID}}
-		{{end}}
 		{{if dbGet (toInt64 $id) $key}} 
 			{{/*bloco de comando que sera executado caso esteja em cooldown*/}} 
 		{{else}}
