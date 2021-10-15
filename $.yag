@@ -35,9 +35,11 @@
 			{{if eq $mod 0}}
 				{{$formula := toInt ( sub 120 $minuto)}}
 				{{$var := exec "remindme" $formula "$p is ready"}}
+				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
 			{{else}}
 				{{$formula := toInt ( sub 60 $minuto)}}
-				{{exec "remindme" $formula "$p is ready"}}
+				{{$var := exec "remindme" $formula "$p is ready"}}
+				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}}
 			{{end}}
 		{{end}}
 
