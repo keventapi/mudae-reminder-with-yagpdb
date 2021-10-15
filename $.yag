@@ -26,7 +26,7 @@ you need replace only the "passed_time" variable if you don't know what you are 
 		{{else}}
 			{{$current_minute := currentTime.Minute}} 
 			{{$formula :=  sub 60 (sub $current_minute $passed_time) }}
-			{{if lt $current_minute $passed_time}}
+			{{if and (lt $current_minute $passed_time) (gt $passed_time 0)}}
 				{{dbSetExpire (toInt64 $id) $key "cooldown" (mult (sub $passed_time $current_minute) 60)}}
 				{{$remind := exec "remindme" (sub $passed_time $current_minute) "rolls is ready"}}
 				{{$message := joinStr "" "the next rolls in " (sub $passed_time $current_minute) " minutes"}}
