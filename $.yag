@@ -7,29 +7,32 @@ the trigger type is start with
 the trigger is the mudae prefix (default "$")
 
 i am replacing the variable names and dataBase names for the english then gimme a moment
+
 */}}
 
-{{$starts := parseArgs 0 "" (carg "string" "string")}}
+{{$start := parseArgs 0 "" (carg "string" "string")}}
 
 
-{{if $starts.IsSet 0}}
-	{{$starts := $starts.Get 0}}
-	{{$starts := lower $starts}}
-	{{if or (eq "ma" $starts) (eq "wa" $starts) (eq "ha" $starts) (eq "mg" $starts) (eq "wg" $starts) (eq "hg" $starts) (eq "m" $starts) (eq "w" $starts) (eq "h" $starts)}}
-		{{$mod := toInt (mod currentTime.Hour 2)}}
-		{{$name := "lembrete_mudae"}}
-		{{$id := .User.ID}}
+{{if $start.IsSet 0}}
+	{{$start := $start.Get 0}}
+	{{$start := lower $start}}
+	{{$id := .User.ID}}
+	
+	{{/*the code'll check if someone rolls command was called*/}}
+	{{if or (eq "ma" $start) (eq "wa" $start) (eq "ha" $start) (eq "mg" $start) (eq "wg" $start) (eq "hg" $start) (eq "m" $start) (eq "w" $start) (eq "h" $start)}}
+		{{$rest := toInt (mod currentTime.Hour 2)}}
+		{{$name := "reminder_mudae"}}
 		{{$key := joinStr "" "cooldown_" $name}}
 		{{if dbGet (toInt64 $id) $key}}
 			{{/*   */}}
 		{{else}}
-			{{$tempo_de_resete := 14}} {{/* if your rolls reset at 00:15 put 15 if it resets at 00:35 put 35 */}}
-			{{$tempo_corrente := currentTime.Minute}} 
-			{{$formula := toInt ( sub 60 (sub $tempo_corrente $tempo_de_resete))}} {{/*60 - (tempo de resete - tempo de agora) */}}
-			{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}} {{/*transforma os minutos q falta em segundos e coloca no banco de dados o cooldown*/}}
-			{{$message := joinStr "" "proximo rolls em " $formula " minutos"}}
+			{{$passed_time := 14}} {{/* replace this */}}
+			{{$current_minute := currentTime.Minute}} 
+			{{$formula := toInt ( sub 60 (sub $current_time $passed_time))}}
+			{{dbSetExpire (toInt64 $id) $key "cooldown" (mult $formula 60)}} 
+			{{$message := joinStr "" "the next rolls in " $formula " minutes"}}
 			{{sendMessage .Channel.ID $message}}
-			{{$remind := exec "remindme" $formula "rolls resetados"}}
+			{{$remind := exec "remindme" $formula "rolls is ready"}}
 		{{end}}
 
 
